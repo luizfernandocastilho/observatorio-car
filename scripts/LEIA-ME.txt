@@ -1,1 +1,10 @@
-Scripts auxiliares. organizar_downloads.py é a tarefa T-03; importar_auditoria.py é a T-09.
+Scripts auxiliares.
+
+organizar_downloads.py (T-03)
+  Organiza os downloads brutos das fontes na árvore dados_brutos/, com extração
+  segura, SHA-256 e inventário de procedência. Guiado por um manifesto; modelo
+  em scripts/manifesto_downloads.exemplo.yml.
+      python scripts/organizar_downloads.py --downloads <pasta_com_os_zips>
+
+importar_auditoria.py (T-09)
+  Ainda não implementado.

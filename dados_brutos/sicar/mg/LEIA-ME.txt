@@ -1,1 +1,26 @@
-Deposite aqui os shapefiles AREA_IMOVEL baixados do Módulo de Consulta Pública do Sicar para os municípios desta UF. Ver contracts/fontes.yml.
+dados_brutos/sicar/mg/ — imóveis do CAR em Minas Gerais (MG)
+
+O que vai aqui:
+  Shapefiles AREA_IMOVEL (perímetros declarados dos imóveis rurais inscritos
+  no CAR) dos municípios de MG. Cada download traz um conjunto de arquivos
+  .shp/.shx/.dbf/.prj, normalmente dentro de um .zip por município.
+
+Fonte (contracts/fontes.yml): sicar_area_imovel
+Formato: shapefile (geralmente em .zip por município)
+SRID: 4674 (SIRGAS 2000)
+URL: https://consultapublica.car.gov.br/publico/
+     (alternativa: download filtrado em https://consulta.car.gov.br/)
+
+Importante:
+  - Download por município, com validação a cada requisição. É manual
+    (regra 9 do CLAUDE.md): NÃO existe nem deve existir código que contorne a
+    validação. Baixe alguns municípios para começar e amplie depois.
+  - As camadas APP, Reserva Legal e Área Consolidada do mesmo município
+    (fontes sicar_app, sicar_reserva_legal, sicar_area_consolidada) também
+    podem ser depositadas aqui — o roteamento é pela 'fonte' do manifesto.
+
+Cada zip é extraído numa subpasta própria (pelo nome do arquivo), para que
+municípios diferentes com o mesmo nome interno (AREA_IMOVEL.shp) não se
+sobreponham. A ingestão varre as subpastas recursivamente.
+
+No manifesto: fonte: sicar_area_imovel, uf: MG.

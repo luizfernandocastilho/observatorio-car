@@ -1,0 +1,12 @@
+dados_brutos/restricoes/unidades_conservacao/
+
+O que vai aqui: shapefile com os limites de unidades de conservação federais
+e estaduais.
+Fonte (contracts/fontes.yml): mma_unidades_conservacao
+Formato: shapefile  |  SRID: 4674 (SIRGAS 2000)
+URL: https://dados.gov.br/  (catálogo; busque a camada de UCs do MMA/ICMBio)
+
+Download aberto e direto: a automação do download é permitida quando a URL
+exata do arquivo estiver fixada em contracts/fontes.yml.
+
+No manifesto: fonte: mma_unidades_conservacao (sem uf).

@@ -98,6 +98,8 @@ Desktop.ini
 dados_brutos/**
 !dados_brutos/**/
 !dados_brutos/**/LEIA-ME.txt
+# O inventário é a procedência (hashes + URLs + datas): versiona-se, os dados não.
+!dados_brutos/INVENTARIO.csv
 
 # Formatos de dado geoespacial/tabular pesado, em qualquer lugar
 *.shp

@@ -1,1 +1,13 @@
-Malha municipal do IBGE (shapefile) com código IBGE de 7 dígitos.
+dados_brutos/ibge/
+
+O que vai aqui: malha municipal do IBGE, com o código IBGE de 7 dígitos
+usado como chave de município em todo o pipeline.
+Fonte (contracts/fontes.yml): ibge_municipios
+Formato: shapefile  |  SRID: 4674 (SIRGAS 2000)
+URL: https://www.ibge.gov.br/geociencias/  (Organização do Território >
+     Malhas Territoriais)
+
+Download aberto e direto: a automação do download é permitida quando a URL
+exata do arquivo estiver fixada em contracts/fontes.yml.
+
+No manifesto: fonte: ibge_municipios (sem uf).

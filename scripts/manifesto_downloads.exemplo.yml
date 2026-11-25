@@ -1,0 +1,37 @@
+# Modelo de manifesto para scripts/organizar_downloads.py (tarefa T-03).
+#
+# Copie para dentro da sua pasta de downloads como `manifesto.yml` e descreva
+# UMA entrada por arquivo baixado. O script usa este arquivo para rotear cada
+# download para a pasta certa em dados_brutos/, calcular o SHA-256 e registrar
+# a procedência em dados_brutos/INVENTARIO.csv.
+#
+# Por que um manifesto, e não adivinhar pelo nome do arquivo: o projeto não
+# inventa procedência (CLAUDE.md). De qual fonte e UF veio cada arquivo é uma
+# decisão explícita do operador, registrada aqui e auditável.
+#
+# Campos por entrada:
+#   arquivo        (obrigatório) nome do arquivo na pasta de downloads
+#   fonte          (obrigatório) chave da fonte em contracts/fontes.yml
+#   uf             (obrigatório só para o Sicar) PA | MG | CE
+#   url            (recomendado) URL exata de onde o arquivo foi baixado
+#   data_download  (recomendado) data do download, no formato AAAA-MM-DD
+#
+# Fontes válidas e para onde cada uma vai: ver ROTAS em
+# scripts/organizar_downloads.py e as chaves em contracts/fontes.yml.
+
+downloads:
+  - arquivo: AREA_IMOVEL_PA_1500602.zip
+    fonte: sicar_area_imovel
+    uf: PA
+    url: https://consultapublica.car.gov.br/publico/
+    data_download: 2026-01-10
+
+  - arquivo: embargos_ibama.zip
+    fonte: ibama_embargos
+    url: https://dadosabertos.ibama.gov.br/
+    data_download: 2026-01-10
+
+  - arquivo: modulo_fiscal_incra.csv
+    fonte: incra_modulo_fiscal
+    url: https://www.gov.br/incra/
+    data_download: 2026-01-10

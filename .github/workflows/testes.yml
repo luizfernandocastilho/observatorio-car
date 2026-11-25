@@ -1,0 +1,33 @@
+# Testes de contrato do Observatório do CAR.
+#
+# Rodam sem banco e sem Airflow (é o que `make testar` faz): validam que
+# contratos e SQL estão coerentes, que a linguagem não é acusatória e que o
+# organizador de downloads roteia, extrai e inventaria corretamente.
+name: testes
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  contratos:
+    name: Testes de contrato (sem banco)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configura Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instala dependências dos testes
+        # Os testes de contrato precisam só de pytest e pyyaml; as dependências
+        # pesadas (Airflow, Great Expectations, PostGIS) não entram aqui.
+        run: python -m pip install --upgrade pip pytest pyyaml
+
+      - name: make testar
+        run: make testar

@@ -1,0 +1,11 @@
+dados_brutos/restricoes/florestas_publicas/
+
+O que vai aqui: shapefile do Cadastro Nacional de Florestas Públicas (CNFP).
+Fonte (contracts/fontes.yml): sfb_florestas_publicas
+Formato: shapefile  |  SRID: 4674 (SIRGAS 2000)
+URL: https://dados.florestal.gov.br/  (Serviço Florestal Brasileiro)
+
+Download aberto e direto: a automação do download é permitida quando a URL
+exata do arquivo estiver fixada em contracts/fontes.yml.
+
+No manifesto: fonte: sfb_florestas_publicas (sem uf).

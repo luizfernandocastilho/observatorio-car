@@ -1,0 +1,29 @@
+dados_brutos/ — arquivos baixados das fontes (fora do git)
+
+Esta pasta guarda os dados brutos das fontes públicas, exatamente como vieram
+(regras 6 e 9 do CLAUDE.md). Os arquivos de dado NÃO entram no git: versiona-se
+só esta estrutura de pastas, os LEIA-ME e o INVENTARIO.csv (a procedência).
+
+Como preencher (tarefa T-03):
+  1. Baixe os arquivos de cada fonte. O download do Sicar é manual, por
+     município, com validação a cada requisição — não há automação (regra 9).
+     Comece por poucos municípios de cada UF para destravar o pipeline.
+  2. Junte os arquivos numa pasta de downloads e descreva cada um num
+     manifesto (modelo em scripts/manifesto_downloads.exemplo.yml).
+  3. Rode:
+         python scripts/organizar_downloads.py --downloads <sua_pasta>
+     O script coloca/extrai cada arquivo na subpasta certa, calcula o SHA-256
+     e grava dados_brutos/INVENTARIO.csv com: arquivo, fonte, UF, bytes, hash,
+     data, url e destino.
+  4. Registre a URL e a data de cada download em contracts/fontes.yml.
+
+Cada subpasta tem um LEIA-ME dizendo qual arquivo vai ali, de qual URL e em
+que formato. Estrutura:
+
+  sicar/{pa,mg,ce}/              imóveis do CAR (AREA_IMOVEL), por UF
+  restricoes/embargos/          áreas embargadas (Ibama)
+  restricoes/unidades_conservacao/
+  restricoes/terras_indigenas/
+  restricoes/florestas_publicas/
+  ibge/                         malha municipal
+  incra/                        módulo fiscal por município
