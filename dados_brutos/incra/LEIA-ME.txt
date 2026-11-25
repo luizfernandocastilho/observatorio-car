@@ -1,1 +1,13 @@
-Tabela de módulo fiscal por município (CSV). Indispensável para o detector d1.
+dados_brutos/incra/
+
+O que vai aqui: tabela de módulo fiscal (em hectares) por município, em CSV.
+Indispensável para o detector d1 (fatiamento): o limite de 4 módulos fiscais
+depende do módulo do município, que varia de 5 a 110 ha.
+Fonte (contracts/fontes.yml): incra_modulo_fiscal
+Formato: csv (sem geometria)
+URL: https://www.gov.br/incra/  (Incra; tabela de módulos fiscais por município)
+
+Download aberto e direto: a automação do download é permitida quando a URL
+exata do arquivo estiver fixada em contracts/fontes.yml.
+
+No manifesto: fonte: incra_modulo_fiscal (sem uf).

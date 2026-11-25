@@ -1,1 +1,13 @@
-Deposite aqui as camadas de restrição territorial. Uma pasta por categoria. Ver contracts/fontes.yml.
+dados_brutos/restricoes/ — camadas de restrição territorial
+
+Uma subpasta por categoria. O detector d2 (incidência em área protegida)
+cruza os imóveis do CAR com estas camadas. Veja o LEIA-ME de cada subpasta
+para a fonte exata, a URL e o formato:
+
+  embargos/               áreas embargadas pelo Ibama   (fonte: ibama_embargos)
+  unidades_conservacao/   UCs federais e estaduais      (fonte: mma_unidades_conservacao)
+  terras_indigenas/       limites de terras indígenas   (fonte: funai_terras_indigenas)
+  florestas_publicas/     florestas públicas (SFB)      (fonte: sfb_florestas_publicas)
+
+Todas em shapefile, SRID 4674 (SIRGAS 2000). No manifesto, cada arquivo usa a
+'fonte' correspondente e não precisa de 'uf'.
