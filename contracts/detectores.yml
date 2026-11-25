@@ -1,0 +1,97 @@
+# =============================================================================
+# contracts/detectores.yml
+#
+# Limiares dos detectores de anomalia. Ficam FORA do SQL de propósito:
+# a calibragem muda a cada rodada de validação manual (ver tarefa T-09) e
+# precisa ser versionada junto com a precisão medida.
+#
+# Regra de ouro do projeto: nenhum detector afirma irregularidade. Cada um
+# produz um SINAL PARA TRIAGEM, com regra, limiar, evidência e confiança.
+# A linguagem acusatória está proibida em código, interface e documentação.
+# =============================================================================
+
+# Confiança declarada por detector. Preencher `precisao_medida` somente com
+# resultado de auditoria manual de amostra aleatória — nunca com estimativa.
+detectores:
+
+  d1_fatiamento:
+    ativo: true
+    descricao: >
+      Conjuntos de imóveis contíguos imediatamente abaixo de 4 módulos fiscais,
+      inscritos em janela curta de tempo. Pode indicar desmembramento para
+      acessar tratamento diferenciado — ou partilha familiar legítima.
+    limiares:
+      # Fração do limite de 4 módulos fiscais a partir da qual o imóvel entra
+      # na faixa suspeita. 0.80 => entre 3,2 e 4,0 módulos.
+      faixa_inferior_modulos: 3.2
+      faixa_superior_modulos: 4.0
+      # Mínimo de imóveis contíguos na faixa para formar um sinal
+      min_imoveis_cluster: 3
+      # Janela de dias entre as inscrições do cluster
+      janela_dias_inscricao: 180
+      # Distância máxima em metros para considerar contiguidade
+      distancia_contiguidade_m: 50
+    precisao_medida: null
+    tamanho_amostra_auditada: 0
+
+  d2_incidencia_area_protegida:
+    ativo: true
+    descricao: >
+      Imóvel declarado com sobreposição relevante a área embargada, unidade de
+      conservação, terra indígena ou floresta pública.
+    limiares:
+      # Percentual mínimo da área do imóvel sobreposta para gerar sinal
+      percentual_sobreposicao_min: 5.0
+      # Área absoluta mínima em hectares (evita ruído de borda)
+      area_sobreposta_min_ha: 1.0
+    precisao_medida: null
+    tamanho_amostra_auditada: 0
+
+  d3_sobreposicao_car_car:
+    ativo: true
+    descricao: >
+      Dois ou mais imóveis declarando a mesma área. Causa provável varia entre
+      erro de digitalização, divisa duplicada e conflito de posse real.
+    limiares:
+      percentual_sobreposicao_min: 10.0
+      area_sobreposta_min_ha: 2.0
+    precisao_medida: null
+    tamanho_amostra_auditada: 0
+
+  d4_geometria_improvavel:
+    ativo: true
+    descricao: >
+      Geometria com assinatura de erro de digitalização: compacidade fora da
+      distribuição, área declarada divergindo da área calculada, ou polígono
+      idêntico a outro apenas deslocado.
+    limiares:
+      # Índice de Polsby-Popper: 4*pi*area / perimetro^2. Abaixo disso, a
+      # geometria é anormalmente filamentar.
+      compacidade_min: 0.05
+      # Divergência percentual tolerada entre área declarada e calculada
+      divergencia_area_declarada_pct: 10.0
+      # Tolerância em metros para considerar dois polígonos "o mesmo deslocado"
+      tolerancia_deslocamento_m: 500
+    precisao_medida: null
+    tamanho_amostra_auditada: 0
+
+  d5_padrao_cadastral_atipico:
+    ativo: true
+    descricao: >
+      Lotes de cadastros feitos em bloco — mesma data de inscrição e mesma
+      área aproximada no mesmo município — em volume fora da distribuição
+      daquele município.
+      NOTA DE PRIVACIDADE: a ideia original agrupava por responsável técnico.
+      Esse campo é dado pessoal e não entra aqui. O agrupamento usa somente
+      atributos observáveis no dado aberto.
+    limiares:
+      # Quantos desvios-padrão acima da mediana do município
+      z_score_min: 3.0
+      min_cadastros_grupo: 10
+    precisao_medida: null
+    tamanho_amostra_auditada: 0
+
+# Amostragem para validação manual
+validacao:
+  casos_por_detector: 50
+  semente_aleatoria: 20270122

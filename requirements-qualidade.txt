@@ -1,0 +1,7 @@
+# Suítes Great Expectations — rodam na sua máquina, não no container.
+#   python3 -m venv .venv && source .venv/bin/activate
+#   pip install -r requirements-qualidade.txt
+#   make suites
+great-expectations[postgresql]==1.0.4
+pandas==2.1.4
+psycopg2-binary==2.9.9

@@ -1,0 +1,1 @@
+Tabela de módulo fiscal por município (CSV). Indispensável para o detector d1.

@@ -1,0 +1,111 @@
+# ========================================
+# Segredos e variáveis de ambiente
+# ========================================
+.env
+.env.*
+!.env.example
+.envrc
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+client_secret*.json
+
+# ========================================
+# Python
+# ========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Virtualenvs
+.venv/
+venv/
+ENV/
+
+# Testes, cobertura e caches de ferramentas
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.mypy_cache/
+.ruff_cache/
+
+# ========================================
+# Docker
+# ========================================
+docker-compose.override.yml
+
+# ========================================
+# Great Expectations (artefatos locais)
+# ========================================
+great_expectations/uncommitted/
+
+# ========================================
+# Jupyter / notebooks
+# ========================================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ========================================
+# Logs e temporários
+# ========================================
+*.log
+logs/*
+!logs/.gitkeep
+tmp/
+temp/
+
+# Scaffold aninhado acidental: espelho vazio da estrutura do projeto,
+# gerado por uma execução anterior do Airflow. Não faz parte do repositório.
+/observatorio-car/
+
+# ========================================
+# IDEs e editores
+# ========================================
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+
+# ========================================
+# Sistema operacional
+# ========================================
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Desktop.ini
+
+# ========================================
+# Dados das fontes (regra 6/9 do CLAUDE.md)
+# dados_brutos/ fica fora do git; versiona-se só a estrutura e os LEIA-ME
+# que explicam onde depositar cada fonte. Os arquivos reais (shapefiles,
+# CSV, zips, geopackages) NUNCA entram no repositório.
+# ========================================
+dados_brutos/**
+!dados_brutos/**/
+!dados_brutos/**/LEIA-ME.txt
+
+# Formatos de dado geoespacial/tabular pesado, em qualquer lugar
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.qix
+*.gpkg
+*.parquet
+*.feather

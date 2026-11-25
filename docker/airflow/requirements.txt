@@ -1,0 +1,13 @@
+# Dependências ADICIONAIS do Airflow. Instaladas com o constraints oficial
+# do Airflow 2.9.3 — sem ele o pip tenta atualizar o próprio Airflow e
+# desencadeia backtracking que arrasta centenas de pacotes.
+#
+# Não liste aqui pandas, sqlalchemy, pyyaml, httpx, tenacity ou psycopg2:
+# já vêm na imagem nas versões corretas, e fixá-las quebra o Airflow.
+# Em especial o Airflow 2.9.3 usa SQLAlchemy 1.4, não 2.x.
+#
+# great-expectations NÃO entra aqui: as suítes rodam na sua máquina
+# (requirements-qualidade.txt), não dentro do container.
+apache-airflow-providers-postgres==5.11.2
+geopandas==1.0.1
+pyogrio==0.9.0

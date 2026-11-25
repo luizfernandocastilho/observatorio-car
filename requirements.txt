@@ -1,0 +1,17 @@
+# Runtime Airflow (usamos a imagem oficial; estas são libs adicionais)
+apache-airflow-providers-postgres==5.11.0
+airflow-provider-great-expectations==0.2.9
+great-expectations[postgresql]==1.0.4
+pandas==2.2.2
+polars==1.5.0
+sqlalchemy==2.0.32
+psycopg2-binary==2.9.9
+adbc-driver-postgresql==1.1.0
+httpx==0.27.0
+tenacity==8.5.0
+openpyxl==3.1.5
+
+# Dev/docs (opcional)
+sqllineage==1.5.3
+mkdocs==1.6.0
+mkdocs-material==9.5.34

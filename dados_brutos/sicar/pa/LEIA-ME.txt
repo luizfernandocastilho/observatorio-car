@@ -1,0 +1,1 @@
+Deposite aqui os shapefiles AREA_IMOVEL baixados do Módulo de Consulta Pública do Sicar para os municípios desta UF. Ver contracts/fontes.yml.

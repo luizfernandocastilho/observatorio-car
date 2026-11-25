@@ -1,0 +1,1 @@
+Deposite aqui as camadas de restrição territorial. Uma pasta por categoria. Ver contracts/fontes.yml.

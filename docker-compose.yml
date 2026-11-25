@@ -1,0 +1,190 @@
+# =============================================================================
+# Docker Compose — PostGIS + Airflow + dashboard para o Observatório do CAR
+#
+# Serviços:
+#   - postgres-dados    : PostGIS com os schemas bronze/prata/ouro (porta 5432)
+#   - postgres-airflow  : banco de metadados do Airflow (porta 5433)
+#   - airflow-init      : migrations, usuário admin e Connections por camada
+#   - airflow-webserver : UI do Airflow (porta 8080)
+#   - airflow-scheduler : scheduler do Airflow
+#   - dashboard         : Streamlit do observatório (porta 8501)
+#
+# Subir:
+#   cp .env.example .env
+#   docker compose up -d
+#
+# Acessar:
+#   - Dashboard:     http://localhost:8501
+#   - Airflow UI:    http://localhost:8080  (airflow/airflow)
+#   - Banco:         psql -h localhost -p 5432 -U etl_admin -d dados
+# =============================================================================
+
+x-airflow-common: &airflow-common
+  build:
+    context: ./docker/airflow
+  image: observatorio-car-airflow:2.9.3
+  environment: &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres-airflow:5432/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
+    AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
+    # Diretório onde os extratores gravam os arquivos baixados das fontes
+    OBSERVATORIO_DIR_DADOS: /opt/airflow/dados_brutos
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./plugins:/opt/airflow/plugins
+    - ./sql:/opt/airflow/sql
+    - ./contracts:/opt/airflow/contracts
+    - ./great_expectations:/opt/airflow/great_expectations
+    - ./dados_brutos:/opt/airflow/dados_brutos
+    - ./logs:/opt/airflow/logs
+  user: "${AIRFLOW_UID:-50000}:0"
+  depends_on:
+    postgres-airflow:
+      condition: service_healthy
+    postgres-dados:
+      condition: service_healthy
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # PostGIS — dados do pipeline (bronze/prata/ouro)
+  #
+  # Usamos PostGIS e não postgres puro: todo o núcleo analítico do
+  # observatório é cruzamento espacial. Sem ST_Intersects no banco, o
+  # trabalho migraria para Python e não escalaria.
+  # ---------------------------------------------------------------------------
+  postgres-dados:
+    image: postgis/postgis:16-3.4
+    container_name: observatorio-postgres-dados
+    environment:
+      POSTGRES_USER: etl_admin
+      POSTGRES_PASSWORD: ${POSTGRES_DADOS_PASSWORD:-etl_admin_senha_dev}
+      POSTGRES_DB: dados
+    ports:
+      - "5442:5432"
+    volumes:
+      - postgres_dados_volume:/var/lib/postgresql/data
+      # Roda na ordem alfabética no primeiro boot do volume
+      - ./sql/00_setup_schemas.sql:/docker-entrypoint-initdb.d/00_setup_schemas.sql:ro
+      - ./sql/bronze/01_tabelas_bronze.sql:/docker-entrypoint-initdb.d/01_tabelas_bronze.sql:ro
+      - ./sql/ouro/01_sinais_anomalia.sql:/docker-entrypoint-initdb.d/02_sinais_anomalia.sql:ro
+      # sql/ montado também fora do initdb, para o make poder
+      # executar os arquivos de transformação via psql
+      - ./sql:/sql:ro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "etl_admin", "-d", "dados"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Postgres — metadados do Airflow (isolado do banco de dados)
+  # ---------------------------------------------------------------------------
+  postgres-airflow:
+    image: postgres:16
+    container_name: observatorio-postgres-airflow
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_airflow_volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Airflow — inicialização
+  # ---------------------------------------------------------------------------
+  airflow-init:
+    <<: *airflow-common
+    container_name: observatorio-airflow-init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db migrate
+        airflow users create \
+          --username airflow --firstname Admin --lastname User \
+          --role Admin --email admin@example.com --password airflow || true
+        airflow connections add 'postgres_dados_bronze' \
+          --conn-type 'postgres' --conn-host 'postgres-dados' \
+          --conn-schema 'dados' --conn-login 'etl_bronze' \
+          --conn-password "${ETL_BRONZE_PASSWORD:-etl_bronze_dev}" \
+          --conn-port '5432' || true
+        airflow connections add 'postgres_dados_prata' \
+          --conn-type 'postgres' --conn-host 'postgres-dados' \
+          --conn-schema 'dados' --conn-login 'etl_prata' \
+          --conn-password "${ETL_PRATA_PASSWORD:-etl_prata_dev}" \
+          --conn-port '5432' || true
+        airflow connections add 'postgres_dados_ouro' \
+          --conn-type 'postgres' --conn-host 'postgres-dados' \
+          --conn-schema 'dados' --conn-login 'etl_ouro' \
+          --conn-password "${ETL_OURO_PASSWORD:-etl_ouro_dev}" \
+          --conn-port '5432' || true
+
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: observatorio-airflow-webserver
+    command: webserver
+    ports:
+      - "8088:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: observatorio-airflow-scheduler
+    command: scheduler
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  # ---------------------------------------------------------------------------
+  # Dashboard — Streamlit lendo a camada ouro com o usuário de leitura
+  # ---------------------------------------------------------------------------
+  dashboard:
+    build:
+      context: ./dashboard
+    container_name: observatorio-dashboard
+    environment:
+      OBSERVATORIO_DB_HOST: postgres-dados
+      OBSERVATORIO_DB_PORT: '5432'
+      OBSERVATORIO_DB_NAME: dados
+      OBSERVATORIO_DB_USER: bi_leitura
+      OBSERVATORIO_DB_PASSWORD: ${BI_LEITURA_PASSWORD:-bi_leitura_dev}
+    ports:
+      - "8502:8501"
+    volumes:
+      - ./dashboard:/app
+    depends_on:
+      postgres-dados:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_dados_volume:
+  postgres_airflow_volume:

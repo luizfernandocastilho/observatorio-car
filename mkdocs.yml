@@ -1,0 +1,131 @@
+# =============================================================================
+# MkDocs — configuração do site de documentação
+#
+# Rodar:
+#   mkdocs serve         # dev, em http://localhost:8000
+#   mkdocs build         # produção, gera site/ estático
+#
+# Publicar no GitHub Pages:
+#   mkdocs gh-deploy
+# =============================================================================
+
+site_name: "observatorio-car — Plataforma de Dados"
+site_description: "Documentação do pipeline medalhão."
+site_author: "time-dados"
+site_url: ""   # preencher em produção
+
+# Repositório (aparece link "edit" em cada página)
+# repo_url: https://github.com/org/observatorio-car
+# edit_uri: edit/main/docs/
+
+# -----------------------------------------------------------------------------
+# Navegação
+# -----------------------------------------------------------------------------
+nav:
+  - Início: index.md
+  - Banco de dados:
+      - Schema: schema.md              # gerado por scripts/gerar_doc_schema.py
+      - Linhagem: linhagem.md          # gerado por scripts/gerar_linhagem.py
+  - Pipelines:
+      - Visão geral: pipelines/index.md
+      # - Vendas Diário: pipelines/vendas_diario.md
+  - Qualidade de dados:
+      - Expectations: qualidade/expectations.md
+      - Rejeitados: qualidade/rejeitados.md
+  - Operação:
+      - Como reprocessar: ops/reprocessar.md
+      - Troubleshooting: ops/troubleshooting.md
+      - Contatos: ops/contatos.md
+  - Glossário: glossario.md
+
+# -----------------------------------------------------------------------------
+# Tema
+# -----------------------------------------------------------------------------
+theme:
+  name: material
+  language: pt
+  palette:
+    # Paleta clara
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Mudar para modo escuro
+    # Paleta escura
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Mudar para modo claro
+  features:
+    - navigation.instant        # navegação sem reload
+    - navigation.tracking       # URL reflete seção ativa
+    - navigation.tabs           # top-level como abas
+    - navigation.sections       # seções expandidas no sidebar
+    - navigation.top            # botão "voltar ao topo"
+    - search.suggest
+    - search.highlight
+    - content.code.copy         # botão copiar em blocos de código
+    - content.tabs.link         # tabs sincronizados entre páginas
+  icon:
+    repo: fontawesome/brands/github
+
+# -----------------------------------------------------------------------------
+# Plugins
+# -----------------------------------------------------------------------------
+plugins:
+  - search:
+      lang: pt
+  # Descomente quando instalar (pip install mkdocs-git-revision-date-localized-plugin)
+  # - git-revision-date-localized:
+  #     type: date
+  #     locale: pt_BR
+
+# -----------------------------------------------------------------------------
+# Extensões Markdown
+# -----------------------------------------------------------------------------
+markdown_extensions:
+  # Admonitions (caixas de nota/aviso/dica)
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      # Suporte a diagramas Mermaid — usado em linhagem
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  # Tabelas, código inline, listas de tarefas
+  - tables
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - footnotes
+  - toc:
+      permalink: "¶"
+      toc_depth: 3
+  - attr_list
+  - md_in_html
+
+# -----------------------------------------------------------------------------
+# Extras
+# -----------------------------------------------------------------------------
+extra:
+  social:
+    - icon: fontawesome/brands/slack
+      link: "#"
+      name: Canal no Slack
+
+extra_css:
+  - stylesheets/extra.css
+
+# Suporte a Mermaid (renderização client-side)
+extra_javascript:
+  - https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js

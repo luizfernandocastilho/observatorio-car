@@ -1,0 +1,142 @@
+# =============================================================================
+# contracts/fontes.yml
+#
+# Catálogo das fontes do observatório. Toda fonte usada no pipeline precisa
+# estar aqui ANTES de ser ingerida: a proposta do InovaCAR será avaliada pela
+# rastreabilidade das bases, e "de onde veio esse dado" é a primeira pergunta
+# que um órgão público faz.
+#
+# Campos obrigatórios por fonte:
+#   url            — endereço de origem (ou endpoint do catálogo)
+#   formato        — shapefile | geopackage | csv | json | api
+#   srid           — EPSG do dado na origem (4674 = SIRGAS 2000, padrão do CAR)
+#   licenca        — licença declarada pela fonte
+#   atualizacao    — periodicidade declarada
+#   versao         — versão/data do arquivo efetivamente usado (preencher!)
+#   observacoes    — restrições práticas de acesso
+# =============================================================================
+
+# ATENÇÃO: os nomes de atributo das fontes geoespaciais NÃO estão fixados aqui
+# de propósito. A camada bronze guarda os atributos em JSONB exatamente como
+# vieram; o mapeamento para colunas tipadas acontece em sql/prata/ e deve ser
+# conferido contra o arquivo real baixado (ver tarefa T-02 em TASKS.md).
+
+ufs_piloto:
+  # Três estados de perfis contrastantes. Trocar aqui propaga para o DAG.
+  - PA   # Amazônia: alta sobreposição com áreas protegidas
+  - MG   # Sudeste: análise avançada, grande volume
+  - CE   # Nordeste: predominância de minifúndios
+
+fontes:
+
+  sicar_area_imovel:
+    descricao: Perímetros declarados dos imóveis rurais inscritos no CAR
+    url: https://consultapublica.car.gov.br/publico/
+    alternativa: https://consulta.car.gov.br/
+    formato: shapefile
+    srid: 4674
+    licenca: dado público (Módulo de Consulta Pública do Sicar)
+    atualizacao: continua
+    versao: null
+    observacoes: >
+      Download disponibilizado por município, com validação a cada requisição.
+      Não automatizar a quebra dessa validação: baixar manualmente os municípios
+      das UFs piloto, ou usar o download filtrado de consulta.car.gov.br, e
+      depositar os arquivos em dados_brutos/sicar/<uf>/.
+
+  sicar_app:
+    descricao: Áreas de Preservação Permanente declaradas
+    url: https://consultapublica.car.gov.br/publico/
+    formato: shapefile
+    srid: 4674
+    licenca: dado público
+    atualizacao: continua
+    versao: null
+    observacoes: A fonte distribui APP em múltiplos arquivos por tipo.
+
+  sicar_area_consolidada:
+    descricao: Áreas de uso consolidado declaradas
+    url: https://consultapublica.car.gov.br/publico/
+    formato: shapefile
+    srid: 4674
+    licenca: dado público
+    atualizacao: continua
+    versao: null
+
+  sicar_reserva_legal:
+    descricao: Reserva Legal declarada
+    url: https://consultapublica.car.gov.br/publico/
+    formato: shapefile
+    srid: 4674
+    licenca: dado público
+    atualizacao: continua
+    versao: null
+
+  sfb_painel_regularizacao:
+    descricao: >
+      Indicadores do Painel da Regularização Ambiental — volumes e status de
+      análise por UF. É a fonte tabular que sustenta a linha do tempo de
+      gargalos quando o marco temporal não vem no shapefile.
+    url: https://dados.florestal.gov.br/
+    formato: csv
+    srid: null
+    licenca: dados abertos (Decreto 8.777/2016)
+    atualizacao: periodica
+    versao: null
+
+  ibama_embargos:
+    descricao: Áreas embargadas por infração ambiental
+    url: https://dadosabertos.ibama.gov.br/
+    formato: shapefile
+    srid: 4674
+    licenca: dados abertos
+    atualizacao: continua
+    versao: null
+
+  mma_unidades_conservacao:
+    descricao: Limites de unidades de conservação federais e estaduais
+    url: https://dados.gov.br/
+    formato: shapefile
+    srid: 4674
+    licenca: dados abertos
+    atualizacao: periodica
+    versao: null
+
+  funai_terras_indigenas:
+    descricao: Limites de terras indígenas
+    url: https://dados.gov.br/
+    formato: shapefile
+    srid: 4674
+    licenca: dados abertos
+    atualizacao: periodica
+    versao: null
+
+  sfb_florestas_publicas:
+    descricao: Cadastro Nacional de Florestas Públicas
+    url: https://dados.florestal.gov.br/
+    formato: shapefile
+    srid: 4674
+    licenca: dados abertos
+    atualizacao: anual
+    versao: null
+
+  incra_modulo_fiscal:
+    descricao: >
+      Tamanho do módulo fiscal em hectares por município. Indispensável: o
+      detector de fatiamento depende do limite de 4 módulos fiscais, que varia
+      de 5 a 110 ha conforme o município.
+    url: https://www.gov.br/incra/
+    formato: csv
+    srid: null
+    licenca: dados abertos
+    atualizacao: rara
+    versao: null
+
+  ibge_municipios:
+    descricao: Malha municipal (geometria e código IBGE de 7 dígitos)
+    url: https://www.ibge.gov.br/geociencias/
+    formato: shapefile
+    srid: 4674
+    licenca: dados abertos
+    atualizacao: anual
+    versao: null
