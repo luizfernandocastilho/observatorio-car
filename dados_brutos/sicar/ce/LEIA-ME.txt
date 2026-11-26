@@ -1,1 +1,52 @@
-Deposite aqui os shapefiles AREA_IMOVEL baixados do Módulo de Consulta Pública do Sicar para os municípios desta UF. Ver contracts/fontes.yml.
+================================================================================
+dados_brutos/sicar/ce/  —  Perímetros de imóvel do CAR (UF: CEARÁ)
+================================================================================
+
+Deposite AQUI os shapefiles AREA_IMOVEL dos municípios do Ceará. Sem eles, a
+tarefa `ingerir_imoveis` do DAG falha de propósito (falha visível é melhor que
+carga vazia silenciosa). Ver contracts/fontes.yml -> sicar_area_imovel.
+
+--------------------------------------------------------------------------------
+1. ONDE BAIXAR
+--------------------------------------------------------------------------------
+Base de Downloads do Sicar Federal:
+    https://www.car.gov.br/publico/estados/downloads
+    (ou pela Consulta Pública: https://consultapublica.car.gov.br/publico/)
+
+Passos:
+  a) Escolha a UF = CE.
+  b) Na lista de municípios, baixe ALGUNS municípios (não o estado inteiro: o
+     arquivo estadual tem vários GB e o acesso costuma ser instável).
+  c) Selecione a camada AREA_IMOVEL (perímetros declarados dos imóveis).
+  d) Resolva o CAPTCHA e baixe o .zip.
+
+NÃO automatizar a quebra do CAPTCHA (regra 9 do projeto). O download é manual.
+
+--------------------------------------------------------------------------------
+2. O QUE DEPOSITAR  (erro mais comum!)
+--------------------------------------------------------------------------------
+Um shapefile NÃO é um arquivo só. Mantenha o conjunto inteiro, mesmo nome base:
+
+    AREA_IMOVEL_1.shp   (geometria)        <- obrigatório
+    AREA_IMOVEL_1.shx   (índice)           <- obrigatório
+    AREA_IMOVEL_1.dbf   (atributos->JSONB) <- obrigatório
+    AREA_IMOVEL_1.prj   (projeção/SRID)    <- recomendado
+    AREA_IMOVEL_1.cpg   (encoding)         <- quando houver
+
+Se faltar .dbf ou .shx, o geopandas não lê. O nome precisa conter AREA_IMOVEL
+(o DAG filtra por isso). Pode extrair o .zip inteiro dentro desta pasta —
+subpastas por município funcionam (a busca é recursiva).
+
+--------------------------------------------------------------------------------
+3. CONFERIR
+--------------------------------------------------------------------------------
+Na raiz do projeto:
+    find dados_brutos/sicar -iname '*AREA_IMOVEL*.shp'
+
+Listou pelo menos um arquivo aqui? Então `ingerir_imoveis` para de falhar.
+Limpe a tarefa no Airflow (ou aguarde a execução diária).
+
+Observações:
+  - SRID: a base vem em 4674 (SIRGAS 2000); o pipeline reprojeta se vier outro.
+  - ind_status (AT/PE/CA) vai para o JSONB; o filtro por situação é na prata.
+    Não descarte imóvel nenhum na ingestão.
