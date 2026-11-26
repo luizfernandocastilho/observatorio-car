@@ -87,38 +87,42 @@ fontes:
   ibama_embargos:
     descricao: Áreas embargadas por infração ambiental
     url: https://dadosabertos.ibama.gov.br/
+    download_portal: https://pamgia.ibama.gov.br/geoservicos/ (GeoServiços > certificado de Embargo > SHP)
     formato: shapefile
     srid: 4674
-    licenca: dados abertos
+    licenca: dados abertos (ODbL)
     atualizacao: continua
-    versao: null
+    versao: "adm_embargos_ibama_a, nacional (92.214 polígonos), baixado do PAMGIA em 2026-11-26. OBS: o link SHP-ZIP do dadosabertos estava quebrado (404); usado o portal GeoServiços."
 
   mma_unidades_conservacao:
     descricao: Limites de unidades de conservação federais e estaduais
-    url: https://dados.gov.br/
+    url: https://cnuc.mma.gov.br/
+    download_portal: https://cnuc.mma.gov.br/map (Dados Geoespaciais > filtro por UF > Download do geo da UC > Shapefile)
     formato: shapefile
     srid: 4674
     licenca: dados abertos
     atualizacao: periodica
-    versao: null
+    versao: "CNUC, UCs filtradas por UF=PA/MG/CE (656 polígonos), baixado em 2026-11-26"
 
   funai_terras_indigenas:
     descricao: Limites de terras indígenas
-    url: https://dados.gov.br/
+    url: https://www.gov.br/funai/pt-br/atuacao/terras-indigenas/geoprocessamento-e-mapas
+    download_portal: página oficial FUNAI > "Terras Indígenas no Brasil (shp)" (geoserver.funai.gov.br, camada tis_poligonais)
     formato: shapefile
     srid: 4674
-    licenca: dados abertos
-    atualizacao: periodica
-    versao: null
+    licenca: dados abertos (reprodução permitida citando a fonte)
+    atualizacao: mensal
+    versao: "tis_poligonais, nacional (667 polígonos), baixado em 2026-11-26"
 
   sfb_florestas_publicas:
     descricao: Cadastro Nacional de Florestas Públicas
     url: https://dados.florestal.gov.br/
+    download_portal: https://mapas.florestal.gov.br/ (item ArcGIS "Cadastro Nacional de Florestas Públicas 2025_2" > Download)
     formato: shapefile
     srid: 4674
     licenca: dados abertos
     atualizacao: anual
-    versao: null
+    versao: "CNFP 2025_2, nacional (12.642 feições, Polygon Z), baixado em 2026-11-26. OBS: geometria 3D — avaliar ST_Force2D na prata."
 
   incra_modulo_fiscal:
     descricao: >
@@ -126,11 +130,13 @@ fontes:
       detector de fatiamento depende do limite de 4 módulos fiscais, que varia
       de 5 a 110 ha conforme o município.
     url: https://www.gov.br/incra/
+    fonte_usada: Embrapa, Doc. 146 "Variação Geográfica do Tamanho dos Módulos Fiscais no Brasil" (2012), compilado das Instruções Especiais do Incra
+    download_direto: https://www.infoteca.cnptia.embrapa.br/bitstream/doc/949260/1/doc146.pdf
     formato: csv
     srid: null
     licenca: dados abertos
     atualizacao: rara
-    versao: null
+    versao: "extraído do PDF Embrapa Doc 146 (2012) em 2026-11-26: 5.528 municípios (uf;municipio;modulo_fiscal_ha). RESSALVAS para T-02: (1) ~35 municípios de MG, faixa 'Piedade do Rio Grande'...'Presidente Kubitschek', faltam por DEFEITO do PDF (página duplicada/ausente); (2) sem código IBGE — join por nome+UF na prata, com grafias antigas (ex.: Itapagé->Itapajé, Santa Isabel->Izabel); (3) Mojuí dos Campos/PA (criado 2013) ausente."
 
   ibge_municipios:
     descricao: Malha municipal (geometria e código IBGE de 7 dígitos)
