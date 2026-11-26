@@ -31,7 +31,11 @@ from medalhao.detectores import (
     executar_sql_parametrizado,
     sortear_amostra_validacao,
 )
-from medalhao.ingestao_geo import descobrir_arquivos, ingerir_camada_geo
+from medalhao.descoberta import (
+    descobrir_arquivos,
+    descobrir_arquivos_obrigatorio,
+)
+from medalhao.ingestao_geo import ingerir_camada_geo
 from medalhao.ingestao_tabular import ingerir_csv_jsonb
 
 CONN_BRONZE = "postgres_dados_bronze"
@@ -106,7 +110,11 @@ def observatorio_car_diario():
             }
             resultados = []
             for pasta, categoria in mapa.items():
-                for arquivo in descobrir_arquivos(DIR_DADOS / "restricoes" / pasta):
+                arquivos = descobrir_arquivos_obrigatorio(
+                    DIR_DADOS / "restricoes" / pasta,
+                    descricao=f"shapefile de restrição '{pasta}'",
+                )
+                for arquivo in arquivos:
                     resultados.append(
                         ingerir_camada_geo(
                             arquivo,
@@ -122,7 +130,9 @@ def observatorio_car_diario():
         def ingerir_referencias() -> list[dict]:
             """Malha municipal do IBGE e módulo fiscal do Incra."""
             resultados = []
-            for arquivo in descobrir_arquivos(DIR_DADOS / "ibge"):
+            for arquivo in descobrir_arquivos_obrigatorio(
+                DIR_DADOS / "ibge", descricao="malha municipal do IBGE (.shp)"
+            ):
                 resultados.append(
                     ingerir_camada_geo(
                         arquivo,
@@ -131,7 +141,11 @@ def observatorio_car_diario():
                         fonte="ibge_municipios",
                     )
                 )
-            for arquivo in descobrir_arquivos(DIR_DADOS / "incra", padrao="*.csv"):
+            for arquivo in descobrir_arquivos_obrigatorio(
+                DIR_DADOS / "incra",
+                padrao="*.csv",
+                descricao="módulo fiscal do Incra (.csv)",
+            ):
                 resultados.append(
                     ingerir_csv_jsonb(
                         arquivo,

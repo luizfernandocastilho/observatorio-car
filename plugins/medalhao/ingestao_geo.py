@@ -22,6 +22,13 @@ from typing import Any
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from psycopg2.extras import execute_values
 
+# Reexportado por compatibilidade: a descoberta mora em módulo só-stdlib para
+# ser testável sem Airflow. Ver medalhao/descoberta.py.
+from medalhao.descoberta import (  # noqa: F401
+    descobrir_arquivos,
+    descobrir_arquivos_obrigatorio,
+)
+
 logger = logging.getLogger(__name__)
 
 SRID_CAR = 4674  # SIRGAS 2000, datum oficial das bases do CAR
@@ -180,13 +187,3 @@ def _hash_arquivo(caminho: Path, bloco: int = 1 << 20) -> str:
         while pedaco := arq.read(bloco):
             digest.update(pedaco)
     return digest.hexdigest()
-
-
-def descobrir_arquivos(
-    diretorio: str | Path, padrao: str = "*.shp"
-) -> list[Path]:
-    """Lista arquivos a ingerir, recursivamente e em ordem estável.
-
-    Usado pelos extratores para percorrer dados_brutos/<fonte>/<uf>/.
-    """
-    return sorted(Path(diretorio).rglob(padrao))
