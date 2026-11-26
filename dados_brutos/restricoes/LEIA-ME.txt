@@ -1,1 +1,27 @@
-Deposite aqui as camadas de restrição territorial. Uma pasta por categoria. Ver contracts/fontes.yml.
+================================================================================
+dados_brutos/restricoes/  —  Camadas de restrição territorial
+================================================================================
+
+Uma pasta por categoria. A tarefa `ingerir_restricoes` do DAG exige pelo menos
+um shapefile em CADA pasta abaixo; faltando qualquer uma, ela falha de propósito
+(falha visível é melhor que carga vazia silenciosa). Ver contracts/fontes.yml.
+
+  embargos/               -> Áreas embargadas por infração ambiental (IBAMA)
+  unidades_conservacao/   -> Limites de UC federais e estaduais (MMA/CNUC)
+  terras_indigenas/       -> Limites de terras indígenas (FUNAI)
+  florestas_publicas/     -> Cadastro Nacional de Florestas Públicas (SFB)
+
+Cada pasta tem seu próprio LEIA-ME.txt com a fonte e o passo a passo.
+
+REGRAS QUE VALEM PARA TODAS:
+  - Deposite o CONJUNTO do shapefile junto (.shp + .shx + .dbf + .prj [+ .cpg]).
+    Só o .shp não basta: sem .dbf/.shx o geopandas não lê.
+  - SRID esperado: 4674 (SIRGAS 2000). Se vier outro, o pipeline reprojeta.
+  - Pode extrair o .zip inteiro dentro da pasta — a busca é recursiva.
+
+Se para o piloto alguma categoria for intencionalmente ausente, remova-a do
+dicionário `mapa` em ingerir_restricoes (dags/observatorio_car_diario.py) para
+ela não travar o bronze.
+
+Conferir (na raiz do projeto):
+    find dados_brutos/restricoes -iname '*.shp'

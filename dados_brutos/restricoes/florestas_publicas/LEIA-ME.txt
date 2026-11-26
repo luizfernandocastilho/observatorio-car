@@ -1,0 +1,24 @@
+================================================================================
+dados_brutos/restricoes/florestas_publicas/  —  Florestas Públicas (SFB)
+================================================================================
+
+Fonte: sfb_florestas_publicas (contracts/fontes.yml)
+Camada: Cadastro Nacional de Florestas Públicas (CNFP).
+
+ONDE BAIXAR
+  Serviço Florestal Brasileiro — dados abertos:
+  https://dados.florestal.gov.br/  (busque "Cadastro Nacional de Florestas
+  Públicas" / CNFP, shapefile).
+  Baixe em shapefile. (Confirme o link atual no portal.)
+
+O QUE DEPOSITAR
+  O conjunto do shapefile aqui nesta pasta:
+    *.shp + *.shx + *.dbf + *.prj  (+ *.cpg quando houver)
+  Pode extrair o .zip inteiro aqui; a busca é recursiva.
+
+OBSERVAÇÕES
+  - SRID esperado 4674 (SIRGAS 2000); o pipeline reprojeta se vier outro.
+  - Atualização anual: registre a versão usada em contracts/fontes.yml.
+
+CONFERIR
+    find dados_brutos/restricoes/florestas_publicas -iname '*.shp'

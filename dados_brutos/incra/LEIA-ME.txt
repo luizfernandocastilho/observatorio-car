@@ -1,1 +1,27 @@
-Tabela de módulo fiscal por município (CSV). Indispensável para o detector d1.
+================================================================================
+dados_brutos/incra/  —  Módulo fiscal por município (Incra)
+================================================================================
+
+Fonte: incra_modulo_fiscal (contracts/fontes.yml)
+Tabela: tamanho do módulo fiscal em hectares por município (CSV).
+Usada por `ingerir_referencias`, que EXIGE pelo menos um .csv aqui — senão
+falha de propósito (falha visível).
+
+Indispensável para o detector de fatiamento (d1): o limite de 4 módulos
+fiscais varia de 5 a 110 ha conforme o município.
+
+ONDE BAIXAR
+  Incra: https://www.gov.br/incra/  (busque "módulo fiscal" por município).
+  Baixe em CSV. (Confirme o link atual no portal.)
+
+O QUE DEPOSITAR
+  O(s) arquivo(s) .csv aqui nesta pasta. A busca é recursiva.
+
+FORMATO (importante para a ingestão)
+  - Separador padrão esperado: ';' (ajustável em ingerir_csv_jsonb -> sep).
+  - Encoding: utf-8; se falhar, tente 'latin-1' (ingerir_csv_jsonb -> encoding).
+  - As colunas vão para JSONB na bronze exatamente como vierem; o mapeamento
+    tipado acontece na prata. Não renomeie cabeçalhos aqui.
+
+CONFERIR
+    find dados_brutos/incra -iname '*.csv'

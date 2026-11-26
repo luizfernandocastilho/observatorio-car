@@ -1,1 +1,26 @@
-Malha municipal do IBGE (shapefile) com código IBGE de 7 dígitos.
+================================================================================
+dados_brutos/ibge/  —  Malha municipal do IBGE
+================================================================================
+
+Fonte: ibge_municipios (contracts/fontes.yml)
+Camada: geometria dos municípios com o código IBGE de 7 dígitos.
+Usada por `ingerir_referencias`, que EXIGE pelo menos um .shp aqui — senão
+falha de propósito (falha visível).
+
+ONDE BAIXAR
+  IBGE — Geociências / Malhas territoriais:
+  https://www.ibge.gov.br/geociencias/  (Organização do território ->
+  Malhas territoriais -> Municípios, shapefile).
+  Baixe a malha de municípios (Brasil ou as UFs PA/MG/CE). Confirme o ano.
+
+O QUE DEPOSITAR
+  O conjunto do shapefile aqui nesta pasta:
+    *.shp + *.shx + *.dbf + *.prj  (+ *.cpg quando houver)
+  Pode extrair o .zip inteiro aqui; a busca é recursiva.
+
+OBSERVAÇÕES
+  - SRID esperado 4674 (SIRGAS 2000); o pipeline reprojeta se vier outro.
+  - O código IBGE de 7 dígitos é a chave que liga imóvel <-> módulo fiscal.
+
+CONFERIR
+    find dados_brutos/ibge -iname '*.shp'

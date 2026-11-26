@@ -1,0 +1,24 @@
+================================================================================
+dados_brutos/restricoes/terras_indigenas/  —  Terras Indígenas (FUNAI)
+================================================================================
+
+Fonte: funai_terras_indigenas (contracts/fontes.yml)
+Camada: limites de terras indígenas.
+
+ONDE BAIXAR
+  FUNAI — Geoprocessamento / Dados Abertos:
+  https://www.gov.br/funai/  (busque "Terras Indígenas" shapefile)
+  Também listado em https://dados.gov.br/ .
+  Baixe em shapefile. (Confirme o link atual no portal.)
+
+O QUE DEPOSITAR
+  O conjunto do shapefile aqui nesta pasta:
+    *.shp + *.shx + *.dbf + *.prj  (+ *.cpg quando houver)
+  Pode extrair o .zip inteiro aqui; a busca é recursiva.
+
+OBSERVAÇÕES
+  - SRID esperado 4674 (SIRGAS 2000); o pipeline reprojeta se vier outro.
+  - A base nacional costuma bastar; o recorte por UF acontece na prata.
+
+CONFERIR
+    find dados_brutos/restricoes/terras_indigenas -iname '*.shp'
