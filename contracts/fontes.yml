@@ -135,8 +135,9 @@ fontes:
   ibge_municipios:
     descricao: Malha municipal (geometria e código IBGE de 7 dígitos)
     url: https://www.ibge.gov.br/geociencias/
+    download_direto: https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2025/UFs/
     formato: shapefile
     srid: 4674
     licenca: dados abertos
     atualizacao: anual
-    versao: null
+    versao: "malha municipal 2025 (UFs PA/MG/CE baixadas de geoftp.ibge.gov.br em 2026-11-26)"
