@@ -63,6 +63,10 @@ DEFAULT_ARGS = {
     default_args=DEFAULT_ARGS,
     tags=["car", "sicar", "medalhao", "inovacar"],
     doc_md=__doc__,
+    # Raiz dos arquivos .sql dos PostgresOperator. Sem isto, o Airflow procura
+    # "prata/01_referencias.sql" relativo à pasta dos DAGs e não acha
+    # (TemplateNotFound). Os .sql moram em sql/, montado em /opt/airflow/sql.
+    template_searchpath="/opt/airflow/sql",
 )
 def observatorio_car_diario():
 
