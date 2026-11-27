@@ -1,0 +1,24 @@
+================================================================================
+dados_brutos/restricoes/unidades_conservacao/  —  Unidades de Conservação
+================================================================================
+
+Fonte: mma_unidades_conservacao (contracts/fontes.yml)
+Camada: limites de unidades de conservação federais e estaduais.
+
+ONDE BAIXAR
+  Cadastro Nacional de Unidades de Conservação (CNUC), via MMA:
+  https://dados.gov.br/  (busque "Unidades de Conservação" / CNUC)
+  Alternativa frequente: download geográfico do ICMBio.
+  Baixe em shapefile. (Confirme o link atual no portal.)
+
+O QUE DEPOSITAR
+  O conjunto do shapefile aqui nesta pasta:
+    *.shp + *.shx + *.dbf + *.prj  (+ *.cpg quando houver)
+  Pode extrair o .zip inteiro aqui; a busca é recursiva.
+
+OBSERVAÇÕES
+  - SRID esperado 4674 (SIRGAS 2000); o pipeline reprojeta se vier outro.
+  - Inclua UCs federais e estaduais que cubram as UFs do recorte (PA, MG, CE).
+
+CONFERIR
+    find dados_brutos/restricoes/unidades_conservacao -iname '*.shp'

@@ -1,0 +1,24 @@
+================================================================================
+dados_brutos/restricoes/embargos/  —  Áreas embargadas (IBAMA)
+================================================================================
+
+Fonte: ibama_embargos (contracts/fontes.yml)
+Camada: áreas embargadas por infração ambiental.
+
+ONDE BAIXAR
+  Portal de Dados Abertos do IBAMA: https://dadosabertos.ibama.gov.br/
+  Procure "Áreas Embargadas" e baixe a versão georreferenciada (shapefile).
+  (Confirme o link atual no portal — o caminho muda entre versões.)
+
+O QUE DEPOSITAR
+  O conjunto do shapefile aqui nesta pasta:
+    *.shp + *.shx + *.dbf + *.prj  (+ *.cpg quando houver)
+  Pode extrair o .zip inteiro aqui; a busca é recursiva.
+
+OBSERVAÇÕES
+  - SRID esperado 4674 (SIRGAS 2000); o pipeline reprojeta se vier outro.
+  - É dado público. O pipeline não exibe nem agrupa por pessoa — só geometrias.
+  - Linguagem: aqui "embargo" é um fato administrativo da fonte, não acusação.
+
+CONFERIR
+    find dados_brutos/restricoes/embargos -iname '*.shp'
